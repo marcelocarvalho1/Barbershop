@@ -6,9 +6,14 @@ import { Badge } from "./_components/ui/badge"
 import { SearchIcon } from "lucide-react"
 import Image from "next/image"
 import { Avatar, AvatarImage } from "./_components/ui/avatar"
+import BarberShopItem from "./_components/barbershop-item"
+import { db } from "@/app/_lib/prisma"
+
 
 //todo components são server components
-export default function Home() {
+const Home = async () => {
+  const barbershops = await db.barbershop.findMany({})
+
   return (
     <div>
       <Header />
@@ -22,7 +27,7 @@ export default function Home() {
             <SearchIcon />
           </Button>
         </div>
-
+        {/* IMAGEM */}
         <div className="relative mt-6 h-[150px] w-full">
           <Image
             alt="banner"
@@ -31,9 +36,14 @@ export default function Home() {
             className="rounded-xl object-cover"
           />
         </div>
+        {/* AGENDAMENTOS */}
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Agendamentos
+        </h2>
 
-        <Card className="mt-6">
+        <Card>
           <CardContent className="flex justify-between p-0">
+            {/* DIV ESQUERDA */}
             <div className="flex flex-col gap-2 py-5 pl-5">
               <Badge className="w-fit">Confirmado</Badge>
 
@@ -54,6 +64,15 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
+      {/* RECOMENDADOS */}
+      <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+        Recomendados
+      </h2>
+      {barbershops.map((barbershop) => (
+        <BarberShopItem key={barbershop.id} barbershop={barbershop} />
+      ))}
     </div>
   )
 }
+
+export default Home
